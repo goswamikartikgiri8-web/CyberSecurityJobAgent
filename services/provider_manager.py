@@ -1,31 +1,31 @@
-from typing import List
-from providers.base_provider import BaseProvider
-from models.job import Job
-
-
 class ProviderManager:
 
     def __init__(self):
-        self.providers: List[BaseProvider] = []
+        self.providers = []
 
-    def register(self, provider: BaseProvider):
+    def register(self, provider):
         self.providers.append(provider)
 
-    def fetch_all(self) -> List[Job]:
+    def fetch_all(self):
 
         jobs = []
+
+        print()
 
         for provider in self.providers:
 
             print(f"[+] {provider.name}")
 
             try:
-                results = provider.fetch_jobs()
-                print(f"    {len(results)} jobs")
 
-                jobs.extend(results)
+                provider_jobs = provider.fetch_jobs()
+
+                print(f"    {len(provider_jobs)} jobs")
+
+                jobs.extend(provider_jobs)
 
             except Exception as e:
-                print(f"    ERROR : {e}")
+
+                print(f"    Failed ({e})")
 
         return jobs

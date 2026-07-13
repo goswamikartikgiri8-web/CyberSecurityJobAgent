@@ -1,7 +1,7 @@
 from providers.greenhouse import GreenhouseProvider
 from providers.lever import LeverProvider
 from providers.adzuna import AdzunaProvider
-
+from providers.naukri import NaukriProvider
 
 def load_providers():
     return [
@@ -11,5 +11,8 @@ def load_providers():
         LeverProvider(),
 
         AdzunaProvider(),
+
+        NaukriProvider(),
+
 
     ]

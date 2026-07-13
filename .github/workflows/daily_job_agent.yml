@@ -1,23 +1,20 @@
-name: Daily Cyber Security Job Agent
+name: Cyber Security Job Agent
 
 on:
-  workflow_dispatch:
 
   schedule:
-    - cron: "0 2 * * *"   # 07:30 AM IST every day
+    - cron: "0 2 * * *"
+
+  workflow_dispatch:
 
 jobs:
+
   run-job-agent:
+
     runs-on: ubuntu-latest
 
-    env:
-      EMAIL_USER: ${{ secrets.EMAIL_USER }}
-      EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-      EMAIL_TO: ${{ secrets.EMAIL_TO }}
-      ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
-      ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
-
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -30,9 +27,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          playwright install chromium
 
       - name: Run Job Agent
         env:
-          PYTHONPATH: ${{ github.workspace }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
         run: |
           python main.py

@@ -56,10 +56,12 @@ class LeverProvider(BaseProvider):
 
                 url = f"https://api.lever.co/v0/postings/{company}?mode=json"
 
-                response = requests.get(url, timeout=20)
+                response = requests.get(
+                    url,
+                    timeout=20
+                )
 
-                if response.status_code != 200:
-                    continue
+                response.raise_for_status()
 
                 data = response.json()
 
@@ -67,7 +69,10 @@ class LeverProvider(BaseProvider):
 
                     title = item.get("text", "")
 
-                    if not any(word in title.lower() for word in KEYWORDS):
+                    if not any(
+                        keyword.lower() in title.lower()
+                        for keyword in KEYWORDS
+                    ):
                         continue
 
                     jobs.append(
@@ -78,15 +83,24 @@ class LeverProvider(BaseProvider):
 
                             title=title,
 
-                            location=item.get("categories", {}).get("location", ""),
+                            location=item.get(
+                                "categories",
+                                {}
+                            ).get(
+                                "location",
+                                ""
+                            ),
 
                             experience="Not Specified",
 
                             salary="",
 
-                            posted=item.get("createdAt", ""),
+                            posted=str(item.get("createdAt", "")),
 
-                            apply_link=item.get("hostedUrl", ""),
+                            apply_link=item.get(
+                                "hostedUrl",
+                                ""
+                            ),
 
                             source="Lever"
 
@@ -95,6 +109,7 @@ class LeverProvider(BaseProvider):
                     )
 
             except Exception:
-                pass
+
+                continue
 
         return jobs

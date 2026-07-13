@@ -56,10 +56,12 @@ class GreenhouseProvider(BaseProvider):
 
                 url = f"https://boards-api.greenhouse.io/v1/boards/{board}/jobs"
 
-                response = requests.get(url, timeout=20)
+                response = requests.get(
+                    url,
+                    timeout=20
+                )
 
-                if response.status_code != 200:
-                    continue
+                response.raise_for_status()
 
                 data = response.json()
 
@@ -67,7 +69,10 @@ class GreenhouseProvider(BaseProvider):
 
                     title = item.get("title", "")
 
-                    if not any(k.lower() in title.lower() for k in KEYWORDS):
+                    if not any(
+                        keyword.lower() in title.lower()
+                        for keyword in KEYWORDS
+                    ):
                         continue
 
                     jobs.append(
@@ -78,7 +83,13 @@ class GreenhouseProvider(BaseProvider):
 
                             title=title,
 
-                            location=item.get("location", {}).get("name", ""),
+                            location=item.get(
+                                "location",
+                                {}
+                            ).get(
+                                "name",
+                                ""
+                            ),
 
                             experience="Not Specified",
 
@@ -86,7 +97,10 @@ class GreenhouseProvider(BaseProvider):
 
                             posted="",
 
-                            apply_link=item.get("absolute_url", ""),
+                            apply_link=item.get(
+                                "absolute_url",
+                                ""
+                            ),
 
                             source="Greenhouse"
 
@@ -95,6 +109,7 @@ class GreenhouseProvider(BaseProvider):
                     )
 
             except Exception:
-                pass
+
+                continue
 
         return jobs
