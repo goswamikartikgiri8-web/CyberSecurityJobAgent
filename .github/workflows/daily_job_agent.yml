@@ -3,11 +3,8 @@ name: Daily Cyber Security Job Agent
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: "0 2 * * *"
-
 jobs:
-  run-job-agent:
+  debug:
     runs-on: ubuntu-latest
 
     env:
@@ -18,19 +15,29 @@ jobs:
       ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
-      - name: Install Dependencies
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Job Agent
+      - name: Debug
         run: |
+          echo "===== CURRENT DIRECTORY ====="
+          pwd
+
+          echo "===== FILES ====="
+          find .
+
+          echo "===== PYTHON PATH ====="
+          python -c "import sys; print(sys.path)"
+
+          echo "===== TEST IMPORT ====="
+          python -c "import database; print('database imported successfully')"
+
+          echo "===== RUN MAIN ====="
           python main.py
