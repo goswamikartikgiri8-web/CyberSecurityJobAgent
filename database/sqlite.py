@@ -32,7 +32,7 @@ class JobDatabase:
                     job.company,
                     job.title,
                     job.location,
-                    job.url,
+                    job.apply_link,
                 ),
             )
             self.conn.commit()
