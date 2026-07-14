@@ -1,14 +1,12 @@
 name: Cyber Security Job Agent
 
 on:
-
   schedule:
     - cron: "0 2 * * *"
 
   workflow_dispatch:
 
 jobs:
-
   run-job-agent:
 
     runs-on: ubuntu-latest
